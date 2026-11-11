@@ -523,10 +523,9 @@
 
                 // Unranked (no marks) students at the end
                 if (invalid.length > 0) {
-                    message += `───────────────\n`;
                     message += `📌 *Not graded*\n`;
                     invalid.forEach(({ student }) => {
-                        message += `• ${student.name} (${student.id}) — Marks: —\n`;
+                        message += `• ${student.name}\n`;
                     });
                     message += `\n`;
                 }
