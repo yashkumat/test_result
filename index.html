@@ -505,11 +505,10 @@
                 const { rankMap, validSorted, invalid } = computeRanks(students, marksState);
 
                 // Build message header
-                let message = `📊 *Pavitra Classes | Test Result* 📊\n`;
-                message += `📚 Topic: ${topic}\n`;
+                let message = `📊 *Pavitra Classes*\n`;
+                message += `📚 ${topic} Test Result\n`;
                 message += `🏫 Class: ${cls}\n`;
                 message += `📝 Total Marks: ${total}\n`;
-                message += `────────────────\n\n`;
 
                 if (validSorted.length === 0) {
                     message += `⚠️ No marks entered yet.\n\n`;
