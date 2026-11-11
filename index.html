@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Pavitra Classes | Test Result</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: #f1f5f9;
+            padding: 1rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #0f172a;
+        }
+
+        .app-container {
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .app-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .app-header h1 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #1e293b, #334155);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .global-controls {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .topic-input,
+        .total-input {
+            background: white;
+            border: 1px solid #cbd5e1;
+            border-radius: 40px;
+            padding: 0.6rem 1.2rem;
+            font-size: 0.95rem;
+            outline: none;
+            transition: 0.2s;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+        }
+
+        .topic-input:focus,
+        .total-input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+
+        .topic-input {
+            width: 180px;
+        }
+
+        .total-input {
+            width: 100px;
+        }
+
+        .class-cards {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            justify-content: center;
+        }
+
+        .class-card {
+            background: white;
+            border-radius: 28px;
+            padding: 0.5rem 1rem;
+            font-weight: 600;
+            font-size: 1rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02), 0 1px 3px rgba(0, 0, 0, 0.05);
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.15s ease;
+            min-width: 80px;
+            text-align: center;
+            color: #1e293b;
+            border: 1px solid #e2e8f0;
+            user-select: none;
+        }
+
+        .class-card:hover {
+            background: #f8fafc;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 18px -8px rgba(0, 0, 0, 0.1);
+        }
+
+        .class-card.active {
+            background: #1e293b;
+            color: white;
+            border-color: #1e293b;
+            box-shadow: 0 10px 18px -6px #1e293b60;
+        }
+
+        .student-section {
+            background: #ffffffcc;
+            backdrop-filter: blur(4px);
+            border-radius: 36px;
+            padding: 1.8rem 1.5rem;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
+            border: 1px solid #e9eef3;
+            margin-bottom: 2rem;
+        }
+
+        .student-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+            gap: 1rem;
+        }
+
+        .student-card {
+            background: white;
+            border-radius: 22px;
+            padding: 1rem 1rem 1.1rem 1rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+            border: 1px solid #eef2f6;
+            transition: all 0.1s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            position: relative;
+        }
+
+        .student-card:hover {
+            border-color: #cbd5e1;
+        }
+
+        .rank-badge {
+            position: absolute;
+            top: -10px;
+            right: -8px;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            font-weight: 700;
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            border-radius: 30px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+            letter-spacing: 0.02em;
+            white-space: nowrap;
+            border: 1.5px solid #fff;
+        }
+
+        .rank-badge.rank-empty {
+            display: none;
+        }
+
+        .student-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .student-name {
+            font-weight: 600;
+            font-size: 1rem;
+            color: #0f172a;
+            line-height: 1.3;
+        }
+
+        .student-id {
+            font-size: 0.7rem;
+            color: #64748b;
+            letter-spacing: 0.02em;
+            font-weight: 500;
+            text-transform: uppercase;
+            margin-top: 2px;
+        }
+
+        .marks-input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 4px;
+        }
+
+        .marks-input-wrapper input {
+            width: 100%;
+            padding: 0.6rem 0.8rem;
+            border-radius: 18px;
+            border: 1px solid #e2e8f0;
+            background: #f8fafc;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: 0.15s;
+            outline: none;
+        }
+
+        .marks-input-wrapper input:focus {
+            border-color: #3b82f6;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .marks-input-wrapper input::placeholder {
+            color: #94a3b8;
+            font-weight: 400;
+            font-size: 0.8rem;
+        }
+
+        .whatsapp-btn-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .whatsapp-btn {
+            background: #25D366;
+            border: none;
+            border-radius: 60px;
+            padding: 1rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: white;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            box-shadow: 0 15px 25px -8px #25D36670;
+            transition: all 0.15s ease;
+            border: 1px solid #1ebe5a;
+            letter-spacing: -0.01em;
+            width: fit-content;
+            min-width: 260px;
+        }
+
+        .whatsapp-btn:hover {
+            background: #20b859;
+            transform: scale(1.01);
+            box-shadow: 0 18px 28px -8px #1e9e4b;
+        }
+
+        .whatsapp-btn:active {
+            transform: scale(0.98);
+        }
+
+        .whatsapp-btn svg {
+            width: 26px;
+            height: 26px;
+            fill: white;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: #64748b;
+            font-size: 1rem;
+            grid-column: 1 / -1;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-container">
+        <div class="app-header">
+            <h1>Pavitra Classes | Result</h1>
+            <div class="global-controls">
+                <input type="text" id="topicInput" class="topic-input" placeholder="Test Topic">
+                <input type="text" id="totalMarksInput" class="total-input" placeholder="Marks">
+            </div>
+        </div>
+
+        <div id="classCardsContainer" class="class-cards"></div>
+
+        <div class="student-section">
+            <div id="studentGrid" class="student-grid">
+                <div class="empty-state">✨ Select a class to load students</div>
+            </div>
+        </div>
+
+        <div class="whatsapp-btn-container">
+            <button id="whatsappSendBtn" class="whatsapp-btn">
+                <svg viewBox="0 0 24 24" width="20" height="20">
+                    <path
+                        d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+                </svg>
+                Send result
+            </button>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            // ---------- DATA ----------
+            const rawStudents = [
+                { name: "Arnav Dharankar", id: "PC-2026-003", class: 10 },
+                { name: "Dhruv sharma", id: "PC-2026-015", class: 10 },
+                { name: "Kaveri Bhamre", id: "PC-2026-009", class: 10 },
+                { name: "Khanak Picha", id: "PC-2026-014", class: 10 },
+                { name: "Nikhil Patil", id: "PC-2026-028", class: 10 },
+                { name: "Nishika Lunawat", id: "PC-2026-013", class: 10 },
+                { name: "Parth Satpute", id: "PC-2026-011", class: 10 },
+                { name: "Pradnya Raka", id: "PC-2026-019", class: 10 },
+                { name: "Rishika Baberwal", id: "PC-2026-012", class: 10 },
+                { name: "Shivam Shinde", id: "PC-2026-030", class: 10 },
+                { name: "Tanish Rupawate", id: "PC-2026-010", class: 10 },
+                { name: "Vedant Musale", id: "PC-2026-008", class: 10 },
+                { name: "Yavhi Bagmar", id: "PC-2026-004", class: 10 },
+                { name: "Nihar Deepak Gaikwad", id: "PC-2026-034", class: 9 },
+                { name: "Abhijeet Santosh Katkale", id: "PC-2026-033", class: 8 },
+                { name: "Hardik Tathed", id: "PC-2026-029", class: 8 },
+                { name: "Prathamesh Dharankar", id: "PC-2026-031", class: 8 },
+                { name: "Sangram Bhagat", id: "PC-2026-018", class: 8 },
+                { name: "Aditya Khatale", id: "PC-2026-035", class: 9 },
+                { name: "Arohi Chordiya", id: "PC-2026-001", class: 9 },
+                { name: "Ayush Vishwakarma", id: "PC-2026-036", class: 9 },
+                { name: "Chaturthi Parakh", id: "PC-2026-022", class: 9 },
+                { name: "Devang Bedmutha", id: "PC-2026-026", class: 9 },
+                { name: "Harshit Picha", id: "PC-2026-025", class: 9 },
+                { name: "Janvhi khatale", id: "PC-2026-027", class: 9 },
+                { name: "Kaustubh Nandre", id: "PC-2026-024", class: 9 },
+                { name: "Khush Khiwansara", id: "PC-2026-037", class: 9 },
+                { name: "Labdhi Nahata", id: "PC-2026-006", class: 9 },
+                { name: "Manasvi Surana", id: "PC-2026-005", class: 9 },
+                { name: "Parikshit Baberwal", id: "PC-2026-023", class: 9 },
+                { name: "Sangram Jadhav", id: "PC-2026-007", class: 9 },
+                { name: "Shaurya Shinde", id: "PC-2026-002", class: 9 }
+            ];
+
+            const studentsByClass = {};
+            rawStudents.forEach(s => {
+                if (!studentsByClass[s.class]) studentsByClass[s.class] = [];
+                studentsByClass[s.class].push(s);
+            });
+            const availableClasses = Object.keys(studentsByClass).map(Number).sort((a, b) => a - b);
+
+            let activeClass = null;
+            const marksState = {}; // studentId -> string marks
+
+            const classCardsContainer = document.getElementById('classCardsContainer');
+            const studentGrid = document.getElementById('studentGrid');
+            const topicInput = document.getElementById('topicInput');
+            const totalMarksInput = document.getElementById('totalMarksInput');
+            const whatsappSendBtn = document.getElementById('whatsappSendBtn');
+
+            // ----- RANKING HELPERS (dense ranking: 1,1,2,3) -----
+            // Given array of {student, marksValue(number|null)} returns map studentId -> rank
+            function computeRanks(students, marksState) {
+                // Build entries with numeric marks or null
+                const entries = students.map(s => {
+                    const raw = marksState[s.id];
+                    const num = (raw !== undefined && raw !== null && raw.trim() !== '') ? Number(raw) : null;
+                    return { student: s, marks: isNaN(num) ? null : num };
+                });
+
+                // Separate valid (numeric) and invalid (null / NaN)
+                const valid = entries.filter(e => e.marks !== null && !isNaN(e.marks));
+                const invalid = entries.filter(e => e.marks === null || isNaN(e.marks));
+
+                // Sort valid descending
+                valid.sort((a, b) => b.marks - a.marks);
+
+                // Dense rank assignment
+                const rankMap = {};
+                let currentRank = 0;
+                let lastMarks = null;
+                for (let i = 0; i < valid.length; i++) {
+                    const e = valid[i];
+                    if (lastMarks === null || e.marks !== lastMarks) {
+                        currentRank += 1;
+                        lastMarks = e.marks;
+                    }
+                    rankMap[e.student.id] = currentRank;
+                }
+                // Invalid students get rank null (will show "—")
+                invalid.forEach(e => { rankMap[e.student.id] = null; });
+
+                return { rankMap, validSorted: valid, invalid };
+            }
+
+            // ----- RENDER CLASS CARDS -----
+            function renderClassCards() {
+                classCardsContainer.innerHTML = '';
+                availableClasses.forEach(cls => {
+                    const card = document.createElement('div');
+                    card.className = `class-card ${activeClass === cls ? 'active' : ''}`;
+                    card.textContent = `Class ${cls}`;
+                    card.dataset.class = cls;
+                    card.addEventListener('click', () => {
+                        activeClass = cls;
+                        document.querySelectorAll('.class-card').forEach(c => c.classList.remove('active'));
+                        card.classList.add('active');
+                        renderStudents(cls); // no focus restore needed here
+                    });
+                    classCardsContainer.appendChild(card);
+                });
+            }
+
+            // ----- RENDER STUDENT CARDS for a given class -----
+            // Students are displayed in rank order (highest first), then unranked last.
+            function renderStudents(cls, focusId = null, cursorPos = null) {
+                const students = studentsByClass[cls] || [];
+                if (students.length === 0) {
+                    studentGrid.innerHTML = `<div class="empty-state">No students in class ${cls}</div>`;
+                    return;
+                }
+
+                const { rankMap, validSorted, invalid } = computeRanks(students, marksState);
+
+                const displayOrder = [
+                    ...validSorted.map(e => e.student),
+                    ...invalid.map(e => e.student)
+                ];
+
+                studentGrid.innerHTML = '';
+                displayOrder.forEach(student => {
+                    const card = document.createElement('div');
+                    card.className = 'student-card';
+                    card.dataset.studentId = student.id;
+
+                    const rank = rankMap[student.id];
+                    const badge = document.createElement('div');
+                    badge.className = 'rank-badge' + (rank === null || rank === undefined ? ' rank-empty' : '');
+                    if (rank !== null && rank !== undefined) {
+                        badge.textContent = `Rank ${rank}`;
+                    }
+                    card.appendChild(badge);
+
+                    const infoDiv = document.createElement('div');
+                    infoDiv.className = 'student-info';
+                    infoDiv.innerHTML = `
+      <span class="student-name">${student.name}</span>
+    `;
+
+                    const inputWrapper = document.createElement('div');
+                    inputWrapper.className = 'marks-input-wrapper';
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.placeholder = 'Marks';
+                    input.id = `marks-${student.id}`;
+                    if (marksState[student.id] !== undefined) {
+                        input.value = marksState[student.id];
+                    }
+
+                    // NEW: keep focus after re-render
+                    input.addEventListener('input', (e) => {
+                        marksState[student.id] = e.target.value;
+                        const pos = e.target.selectionStart;
+                        renderStudents(cls, student.id, pos);
+                    });
+
+                    inputWrapper.appendChild(input);
+                    card.appendChild(infoDiv);
+                    card.appendChild(inputWrapper);
+                    studentGrid.appendChild(card);
+                });
+
+                // NEW: restore focus + cursor to the same input
+                if (focusId) {
+                    const el = document.getElementById(`marks-${focusId}`);
+                    if (el) {
+                        el.focus();
+                        // restore cursor (clamp to current length in case value changed)
+                        const pos = Math.min(cursorPos ?? el.value.length, el.value.length);
+                        try { el.setSelectionRange(pos, pos); } catch (_) { }
+                    }
+                }
+            }
+
+            // ----- BUILD WHATSAPP MESSAGE (rank-wise sorted, dense ranking) -----
+            function buildWhatsAppMessage() {
+                const topic = topicInput.value.trim() || 'Test';
+                const total = totalMarksInput.value.trim() || '100';
+                const cls = activeClass;
+                if (!cls) {
+                    alert('Please select a class first.');
+                    return null;
+                }
+                const students = studentsByClass[cls] || [];
+                if (students.length === 0) {
+                    alert('No students in this class.');
+                    return null;
+                }
+
+                // compute ranks
+                const { rankMap, validSorted, invalid } = computeRanks(students, marksState);
+
+                // Build message header
+                let message = `📊 *Pavitra Classes | Test Result* 📊\n`;
+                message += `📚 Topic: ${topic}\n`;
+                message += `🏫 Class: ${cls}\n`;
+                message += `📝 Total Marks: ${total}\n`;
+                message += `────────────────\n\n`;
+
+                if (validSorted.length === 0) {
+                    message += `⚠️ No marks entered yet.\n\n`;
+                }
+
+                // Ranked students (descending marks)
+                validSorted.forEach(({ student, marks }) => {
+                    const rank = rankMap[student.id];
+                    message += `🏅 *Rank ${rank}* — ${student.name}\n`;
+                    message += ` Marks: ${marks} / ${total}\n\n`;
+                });
+
+                // Unranked (no marks) students at the end
+                if (invalid.length > 0) {
+                    message += `───────────────\n`;
+                    message += `📌 *Not graded*\n`;
+                    invalid.forEach(({ student }) => {
+                        message += `• ${student.name} (${student.id}) — Marks: —\n`;
+                    });
+                    message += `\n`;
+                }
+                return message;
+            }
+
+            // ----- SEND TO WHATSAPP -----
+            function sendToWhatsApp() {
+                const message = buildWhatsAppMessage();
+                if (!message) return;
+                const encoded = encodeURIComponent(message);
+                const whatsappUrl = `https://wa.me/?text=${encoded}`;
+                window.open(whatsappUrl, '_blank');
+            }
+
+            // ----- INIT -----
+            function init() {
+                renderClassCards();
+                if (availableClasses.length > 0) {
+                    activeClass = availableClasses[0];
+                    setTimeout(() => {
+                        document.querySelectorAll('.class-card').forEach(c => {
+                            if (Number(c.dataset.class) === activeClass) c.classList.add('active');
+                        });
+                        renderStudents(activeClass);
+                    }, 10);
+                } else {
+                    studentGrid.innerHTML = `<div class="empty-state">No classes available</div>`;
+                }
+                whatsappSendBtn.addEventListener('click', sendToWhatsApp);
+            }
+
+            init();
+        })();
+    </script>
+</body>
+
+</html>
